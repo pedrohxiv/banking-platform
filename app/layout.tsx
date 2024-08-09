@@ -21,7 +21,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-const RootLayout = ({ children }: Props) => {
+const AppLayout = ({ children }: Props) => {
   return (
     <html>
       <body className={cn(inter.variable, ibmPlexSerif.variable)}>
@@ -31,4 +31,4 @@ const RootLayout = ({ children }: Props) => {
   );
 };
 
-export default RootLayout;
+export default AppLayout;
