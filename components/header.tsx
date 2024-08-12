@@ -7,16 +7,16 @@ interface Props {
 
 export const Header = ({ subtext, title, type = "title", user }: Props) => {
   return (
-    <header className="home-header">
-      <div className="header-box">
-        <h1 className="header-box-title">
-          {title}
-          {type === "greeting" && (
-            <span className="text-primary ml-2">{user}</span>
-          )}
-        </h1>
-        <p className="header-box-subtext">{subtext}</p>
-      </div>
-    </header>
+    <div className="flex flex-col gap-1">
+      <h1 className="text-2xl leading-[30px] lg:text-3xl lg:leading-[38px] font-semibold text-gray-900">
+        {title}
+        {type === "greeting" && (
+          <span className="text-primary ml-2">{user}</span>
+        )}
+      </h1>
+      <p className="text-sm lg:text-base font-normal text-gray-600">
+        {subtext}
+      </p>
+    </div>
   );
 };
