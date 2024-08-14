@@ -20,3 +20,26 @@ export const sidebarLinks = [
     label: "Transfer Funds",
   },
 ];
+
+export const authDefaultValues = (type: "sign-in" | "sign-up") => {
+  const signInFields = {
+    email: "",
+    password: "",
+  };
+
+  const signUpFields = {
+    firstName: "",
+    lastName: "",
+    address: "",
+    city: "",
+    state: "",
+    postalCode: "",
+    dateOfBirth: "",
+    ssn: "",
+  };
+
+  return {
+    ...signInFields,
+    ...(type === "sign-up" && signUpFields),
+  };
+};

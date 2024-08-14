@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
+import { Toaster } from "@/components/ui/toaster";
 import "@/styles/global.css";
 
 const font = Inter({ subsets: ["latin"] });
@@ -18,7 +19,10 @@ interface Props {
 const AppLayout = ({ children }: Props) => {
   return (
     <html>
-      <body className={font.className}>{children}</body>
+      <body className={font.className}>
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 };
