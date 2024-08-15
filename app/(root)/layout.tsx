@@ -1,15 +1,21 @@
 import Image from "next/image";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 
+import { getLoggedInUser } from "@/actions/user";
 import { MobileNavbar } from "@/components/mobile-navbar";
 import { Sidebar } from "@/components/sidebar";
-import Link from "next/link";
 
 interface Props {
   children: React.ReactNode;
 }
 
-const RootLayout = ({ children }: Props) => {
-  const user = { firstName: "John", lastName: "Doe" };
+const RootLayout = async ({ children }: Props) => {
+  const user = await getLoggedInUser();
+
+  if (!user) {
+   return redirect("/sign-in");
+  }
 
   return (
     <main className="flex h-screen w-full">

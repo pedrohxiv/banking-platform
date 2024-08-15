@@ -4,10 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { signIn, signUp } from "@/actions/user";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -28,10 +30,12 @@ interface Props {
 }
 
 export const AuthForm = ({ type }: Props) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { toast } = useToast();
+
+  const router = useRouter();
 
   const formSchema = authFormSchema(type);
   const defaultValues = authDefaultValues(type);
@@ -47,9 +51,23 @@ export const AuthForm = ({ type }: Props) => {
     try {
       switch (type) {
         case "sign-in":
-          break;
+          const response = await signIn(values);
+
+          if (!response) {
+            toast({
+              variant: "destructive",
+              title: "User Not Found!",
+              description: "Check your email and password and try again.",
+            });
+
+            break;
+          }
+
+          router.push("/");
         case "sign-up":
-          break;
+          const user = await signUp(values);
+
+          setUser(user);
       }
     } catch (error) {
       console.error(error);
@@ -65,15 +83,7 @@ export const AuthForm = ({ type }: Props) => {
   };
 
   return (
-    <section
-      className={cn(
-        "flex min-h-screen w-full flex-col justify-center gap-5 py-10 md:gap-8",
-        {
-          "max-w-[420px]": type === "sign-in",
-          "max-w-[580px] xl:max-w-[840px]": type === "sign-up",
-        }
-      )}
-    >
+    <section className="flex min-h-screen w-full flex-col justify-center gap-5 py-10 md:gap-8 max-w-[520px]">
       <header className="flex flex-col gap-5 md:gap-8">
         <Link
           href={isLoading ? "#" : "/"}
@@ -93,8 +103,10 @@ export const AuthForm = ({ type }: Props) => {
           </h1>
           <p className="text-base font-normal text-gray-600">
             {user
-              ? "Link your account to get started"
-              : "Please enter your details"}
+              ? "Link your account to get started."
+              : type === "sign-up"
+              ? "Create your account by entering your details."
+              : "Enter your credentials to access your account."}
           </p>
         </div>
       </header>

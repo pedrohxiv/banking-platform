@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
+import { logout } from "@/actions/user";
 import {
   Sheet,
   SheetClose,
@@ -19,6 +20,13 @@ interface Props {
 
 export const MobileNavbar = ({ user }: Props) => {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logout();
+
+    router.push("sign-in");
+  };
 
   return (
     <Sheet>
@@ -35,7 +43,7 @@ export const MobileNavbar = ({ user }: Props) => {
             Banking Platform
           </h1>
         </Link>
-        <div className="flex h-[calc(100vh-72px)] flex-col justify-between overflow-y-auto">
+        <div className="flex h-[calc(100vh-96px)] sm:h-[calc(100vh-66px)] flex-col justify-between overflow-y-auto">
           <SheetClose asChild>
             <nav className="flex h-full flex-col gap-6 pt-16 text-white mx-2">
               {sidebarLinks.map((link) => (
@@ -73,6 +81,27 @@ export const MobileNavbar = ({ user }: Props) => {
               ))}
             </nav>
           </SheetClose>
+          <footer className="flex items-center justify-between gap-2 py-6 border-t border-gray-200">
+            <div className="flex size-10 items-center justify-center rounded-full bg-gray-200">
+              <p className="text-xl font-bold text-gray-700">
+                {user.firstName[0]}
+              </p>
+            </div>
+            <div className="flex flex-1 flex-col justify-center max-w-[100px] sm:max-w-[250px]">
+              <h1 className="text-sm truncate text-gray-700 font-semibold">
+                {user.firstName}
+              </h1>
+              <p className="text-sm truncate font-normal text-gray-600">
+                {user.email}
+              </p>
+            </div>
+            <div
+              className="cursor-pointer relative size-5"
+              onClick={handleLogout}
+            >
+              <Image src="icons/logout.svg" fill alt="logout" />
+            </div>
+          </footer>
         </div>
       </SheetContent>
     </Sheet>

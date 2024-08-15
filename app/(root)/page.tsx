@@ -1,13 +1,16 @@
+import { redirect } from "next/navigation";
+
+import { getLoggedInUser } from "@/actions/user";
 import { Header } from "@/components/header";
 import { RightSidebar } from "@/components/right-sidebar";
 import { TotalBalance } from "@/components/total-balance";
 
-const RootPage = () => {
-  const user = {
-    firstName: "John",
-    lastName: "Doe",
-    email: "johndoe@mail.com",
-  };
+const RootPage = async () => {
+  const user = await getLoggedInUser();
+
+  if (!user) {
+    return redirect("/sign-in");
+  }
 
   return (
     <section className="no-scrollbar flex w-full flex-row max-xl:max-h-screen max-xl:overflow-y-scroll">
