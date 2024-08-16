@@ -12,3 +12,11 @@ export const formatAmount = (amount: number) => {
     minimumFractionDigits: 2,
   }).format(amount);
 };
+
+export const extractCustomerIdFromUrl = (url: string) => {
+  const parts = url.split("/");
+
+  const customerId = parts[parts.length - 1];
+
+  return customerId;
+};

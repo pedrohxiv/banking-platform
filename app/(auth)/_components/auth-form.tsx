@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { signIn, signUp } from "@/actions/user";
+import { PlaidLink } from "@/components/plaid-link";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -30,7 +31,7 @@ interface Props {
 }
 
 export const AuthForm = ({ type }: Props) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { toast } = useToast();
@@ -111,7 +112,9 @@ export const AuthForm = ({ type }: Props) => {
         </div>
       </header>
       {user ? (
-        <div className="flex flex-col gap-4"></div>
+        <div className="flex flex-col gap-4">
+          <PlaidLink user={user} variant="primary" />
+        </div>
       ) : (
         <>
           <Form {...form}>
@@ -223,11 +226,10 @@ export const AuthForm = ({ type }: Props) => {
                               disabled={isLoading}
                               onChange={(e) =>
                                 field.onChange(
-                                  e.target.value
-                                    .replace(/[^A-Za-z]/g, "")
-                                    .replace(/(?:^|\s)\S/g, (string) =>
-                                      string.toUpperCase()
-                                    )
+                                  e.target.value.replace(
+                                    /(?:^|\s)\S/g,
+                                    (string) => string.toUpperCase()
+                                  )
                                 )
                               }
                             />
