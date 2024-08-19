@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 import { logout } from "@/actions/user";
+import { PlaidLink } from "@/components/plaid-link";
 import { sidebarLinks } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
@@ -31,9 +32,9 @@ export const Sidebar = ({ user }: Props) => {
             height={34}
             width={34}
             alt="logo"
-            className="size-[24px] max-xl:size-14"
+            className="size-[24px] max-2xl:size-14"
           />
-          <h1 className="text-[23px] font-bold text-black-primary max-xl:hidden">
+          <h1 className="text-[23px] font-bold text-black-primary max-2xl:hidden">
             Banking Platform
           </h1>
         </Link>
@@ -61,7 +62,7 @@ export const Sidebar = ({ user }: Props) => {
             </div>
             <p
               className={cn(
-                "text-base font-semibold max-xl:hidden text-black-secondary",
+                "text-base font-semibold max-2xl:hidden text-black-secondary",
                 {
                   "text-white": pathname === link.route,
                 }
@@ -71,12 +72,13 @@ export const Sidebar = ({ user }: Props) => {
             </p>
           </Link>
         ))}
+        <PlaidLink user={user} />
       </nav>
       <footer className="flex items-center justify-between gap-2 py-6 border-t border-gray-200">
-        <div className="flex size-10 items-center justify-center rounded-full bg-gray-200 max-xl:hidden">
+        <div className="flex size-10 items-center justify-center rounded-full bg-gray-200 max-2xl:hidden">
           <p className="text-xl font-bold text-gray-700">{user.firstName[0]}</p>
         </div>
-        <div className="flex flex-1 flex-col justify-center max-xl:hidden max-w-[150px]">
+        <div className="flex flex-1 flex-col justify-center max-2xl:hidden max-w-[150px]">
           <h1 className="text-sm truncate text-gray-700 font-semibold">
             {user.firstName}
           </h1>
@@ -85,7 +87,7 @@ export const Sidebar = ({ user }: Props) => {
           </p>
         </div>
         <div
-          className="cursor-pointer relative size-5 max-xl:w-full max-xl:flex max-xl:justify-center max-xl:items-center"
+          className="cursor-pointer relative size-5 max-2xl:w-full max-2xl:flex max-2xl:justify-center max-2xl:items-center"
           onClick={handleLogout}
         >
           <Image src="icons/logout.svg" fill alt="logout" />

@@ -2,10 +2,7 @@
 
 import { getBank, getBanks } from "@/actions/bank";
 import { getInstitution } from "@/actions/institution";
-import {
-  getTransactions,
-  getTransactionsByBankId,
-} from "@/actions/transaction";
+import { getTransactions } from "@/actions/transaction";
 import { plaidClient } from "@/lib/plaid";
 
 export const getAccount = async ({
@@ -23,14 +20,6 @@ export const getAccount = async ({
     const accounts = await plaidClient.accountsGet({
       access_token: bank.accessToken,
     });
-
-    const transfers = await getTransactionsByBankId({
-      bankId: bank.$id,
-    });
-
-    if (!transfers) {
-      throw new Error("Transfers not found");
-    }
 
     const institution = await getInstitution({
       institutionId: accounts.data.item.institution_id!,
@@ -57,18 +46,9 @@ export const getAccount = async ({
         subtype: accounts.data.accounts[0].subtype! as string,
         appwriteItemId: bank.$id,
       },
-      transactions: [
-        ...transactions,
-        ...transfers.documents.map((transferData) => ({
-          id: transferData.$id,
-          name: transferData.name!,
-          amount: transferData.amount!,
-          date: transferData.$createdAt,
-          paymentChannel: transferData.channel,
-          category: transferData.category,
-          type: transferData.senderBankId === bank.$id ? "debit" : "credit",
-        })),
-      ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
+      transactions: [...transactions].sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      ),
     };
   } catch (error) {
     console.error(error);

@@ -57,3 +57,10 @@ declare type User = {
   dateOfBirth: string;
   ssn: string;
 };
+
+declare type AccountTypes =
+  | "depository"
+  | "credit"
+  | "loan "
+  | "investment"
+  | "other";

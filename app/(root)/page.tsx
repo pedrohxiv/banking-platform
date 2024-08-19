@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getAccount, getAccounts } from "@/actions/account";
 import { getLoggedInUser } from "@/actions/user";
 import { Header } from "@/components/header";
+import { RecentTransactions } from "@/components/recent-transactions";
 import { RightSidebar } from "@/components/right-sidebar";
 import { TotalBalance } from "@/components/total-balance";
 
@@ -23,9 +24,11 @@ const RootPage = async ({
     return;
   }
 
+  const appwriteItemId =
+    (searchParams.id as string) || accounts.data[0].appwriteItemId;
+
   const account = await getAccount({
-    appwriteItemId:
-      (searchParams.id as string) || accounts?.data[0].appwriteItemId,
+    appwriteItemId,
   });
 
   return (
@@ -44,6 +47,12 @@ const RootPage = async ({
             currentBalance={accounts.currentBalance}
           />
         </header>
+        <RecentTransactions
+          accounts={accounts.data}
+          transactions={account?.transactions}
+          appwriteItemId={accounts.data[0].appwriteItemId}
+          page={+(searchParams.page as string) || 1}
+        />
       </div>
       <RightSidebar
         user={user}
