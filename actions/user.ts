@@ -10,34 +10,11 @@ import type {
   Products,
 } from "plaid";
 
+import { createBank } from "@/actions/bank";
 import { addFundingSource, createDwollaCustomer } from "@/actions/dwolla";
 import { createAdminClient, createSessionClient } from "@/lib/appwrite";
 import { plaidClient } from "@/lib/plaid";
 import { extractCustomerIdFromUrl } from "@/lib/utils";
-
-export const createBankAccount = async (values: {
-  accessToken: string;
-  userId: string;
-  accountId: string;
-  bankId: string;
-  fundingSourceUrl: string;
-  shareableId: string;
-}) => {
-  try {
-    const { database } = await createAdminClient();
-
-    const bankAccount = await database.createDocument(
-      process.env.APPWRITE_DATABASE_ID!,
-      process.env.APPWRITE_BANK_COLLECTION_ID!,
-      ID.unique(),
-      { ...values }
-    );
-
-    return bankAccount;
-  } catch (error) {
-    console.error(error);
-  }
-};
 
 export const createLinkToken = async (user: User) => {
   try {
@@ -98,7 +75,7 @@ export const exchangePublicToken = async ({
       throw Error;
     }
 
-    await createBankAccount({
+    await createBank({
       userId: user.$id,
       bankId: itemId,
       accountId: accountData.account_id,

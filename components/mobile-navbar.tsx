@@ -36,10 +36,10 @@ export const MobileNavbar = ({ user }: Props) => {
       <SheetContent side="left" className="max-w-[264px] border-none">
         <Link
           href="/"
-          className="cursor-pointer flex items-center py-1 mx-2 gap-2 w-fit"
+          className="cursor-pointer flex items-center py-1 ml-2 gap-2 w-fit"
         >
           <Image src="/icons/logo.svg" height={34} width={34} alt="logo" />
-          <h1 className="text-[26px] leading-8 font-bold text-black-primary">
+          <h1 className="text-[20px] font-bold text-black-primary">
             Banking Platform
           </h1>
         </Link>

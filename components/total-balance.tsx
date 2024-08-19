@@ -2,7 +2,7 @@ import { Counter } from "@/components/counter";
 import { DoughnutChart } from "@/components/doughnut-chart";
 
 interface Props {
-  accounts: [];
+  accounts: Account[];
   banks: number;
   currentBalance: number;
 }

@@ -1,16 +1,32 @@
 import { redirect } from "next/navigation";
 
+import { getAccount, getAccounts } from "@/actions/account";
 import { getLoggedInUser } from "@/actions/user";
 import { Header } from "@/components/header";
 import { RightSidebar } from "@/components/right-sidebar";
 import { TotalBalance } from "@/components/total-balance";
 
-const RootPage = async () => {
+const RootPage = async ({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) => {
   const user = await getLoggedInUser();
 
   if (!user) {
     return redirect("/sign-in");
   }
+
+  const accounts = await getAccounts({ userId: user.$id });
+
+  if (!accounts) {
+    return;
+  }
+
+  const account = await getAccount({
+    appwriteItemId:
+      (searchParams.id as string) || accounts?.data[0].appwriteItemId,
+  });
 
   return (
     <section className="no-scrollbar flex w-full flex-row max-xl:max-h-screen max-xl:overflow-y-scroll">
@@ -20,18 +36,19 @@ const RootPage = async () => {
             subtext="Access and manage your account and transactions efficiently."
             title="Welcome"
             type="greeting"
-            user={user.firstName || "Guest"}
+            user={`${user.firstName} ${user.lastName}` || "Guest"}
           />
-          <TotalBalance accounts={[]} banks={1} currentBalance={1250.35} />
+          <TotalBalance
+            accounts={accounts.data}
+            banks={accounts.banks}
+            currentBalance={accounts.currentBalance}
+          />
         </header>
       </div>
       <RightSidebar
         user={user}
-        transactions={[]}
-        banks={[
-          { name: user.firstName, currentBalance: 123.5 },
-          { name: user.firstName, currentBalance: 45.5 },
-        ]}
+        transactions={account?.transactions}
+        banks={accounts.data.slice(0, 2)}
       />
     </section>
   );

@@ -5,8 +5,8 @@ import { BankCard } from "@/components/bank-card";
 import { cn } from "@/lib/utils";
 
 interface Props {
-  banks: Account[];
-  transactions: [];
+  banks: Bank[] & Account[];
+  transactions: Transaction[];
   user: User;
 }
 
