@@ -42,10 +42,10 @@ export const BankCard = ({
                 &#9679;&#9679; / &#9679;&#9679;
               </h2>
             </div>
-            <p className="text-sm font-semibold tracking-[1.1px] text-white">
+            <p className="text-sm font-semibold text-white">
               &#9679;&#9679;&#9679;&#9679; &#9679;&#9679;&#9679;&#9679;{" "}
               &#9679;&#9679;&#9679;&#9679;{" "}
-              <span className="text-base">1234</span>
+              <span className="text-base">{account.mask}</span>
             </p>
           </article>
         </div>

@@ -25,12 +25,13 @@ export const RecentTransactions = ({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const handleBankChange = (account: Account) => {
+  const handleBankChange = (id: string) => {
     const url = formUrlQuery({
       params: searchParams.toString(),
       key: "id",
-      value: account?.appwriteItemId,
+      value: id,
     });
+
     router.push(url, { scroll: false });
   };
 
@@ -41,7 +42,9 @@ export const RecentTransactions = ({
           Recent Transactions
         </h2>
         <Link
-          href={`/transaction-history/?id=${appwriteItemId}`}
+          href={`/transaction-history/?id=${
+            searchParams.get("id") ? searchParams.get("id") : appwriteItemId
+          }`}
           className="text-sm rounded-lg border border-gray-300 px-4 py-2.5 font-semibold text-gray-700"
         >
           View all
@@ -50,15 +53,15 @@ export const RecentTransactions = ({
       <Tabs defaultValue={appwriteItemId} className="w-full">
         <TabsList className="custom-scrollbar mb-8 flex w-full flex-nowrap">
           {accounts.map((account) => (
-            <TabsTrigger key={account.id} value={account.appwriteItemId}>
-              <div
-                onClick={() => handleBankChange(account)}
-                className="gap-[18px] flex px-2 sm:px-4 py-2 transition-all"
-              >
-                <p className="text-base line-clamp-1 flex-1 font-medium">
-                  {account.name}
-                </p>
-              </div>
+            <TabsTrigger
+              key={account.id}
+              value={account.appwriteItemId}
+              onClick={() => handleBankChange(account.appwriteItemId)}
+              className="gap-[18px] flex px-2 sm:px-4 py-2 transition-all"
+            >
+              <p className="text-base line-clamp-1 flex-1 font-medium">
+                {account.name}
+              </p>
             </TabsTrigger>
           ))}
         </TabsList>
@@ -69,15 +72,19 @@ export const RecentTransactions = ({
             className="space-y-4"
           >
             <div
-              onClick={() => handleBankChange(account)}
+              onClick={() => handleBankChange(account.appwriteItemId)}
               className={cn(
-                "gap-[18px] flex p-4 transition-all border bg-blue-25 border-transparent rounded-xl hover:shadow-sm cursor-pointer shadow-sm hover:border-blue-700",
-                accountTypeColors(account.type as AccountTypes).bg
+                "gap-[18px] flex p-4 transition-all border bg-blue-25 border-transparent rounded-xl hover:shadow-sm cursor-pointer",
+                accountTypeColors(account.type as AccountTypes).bg,
+                {
+                  "shadow-sm border-blue-700":
+                    searchParams.get("id") === account.appwriteItemId,
+                }
               )}
             >
               <figure
                 className={cn(
-                  "flex-center h-fit rounded-full bg-blue-100",
+                  "flex items-center justify-center h-fit rounded-full bg-blue-100",
                   accountTypeColors(account.type as AccountTypes).lightBg
                 )}
               >

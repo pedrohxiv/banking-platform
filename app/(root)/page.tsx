@@ -7,11 +7,11 @@ import { RecentTransactions } from "@/components/recent-transactions";
 import { RightSidebar } from "@/components/right-sidebar";
 import { TotalBalance } from "@/components/total-balance";
 
-const RootPage = async ({
-  searchParams,
-}: {
+interface Props {
   searchParams: { [key: string]: string | string[] | undefined };
-}) => {
+}
+
+const RootPage = async ({ searchParams }: Props) => {
   const user = await getLoggedInUser();
 
   if (!user) {
@@ -24,11 +24,9 @@ const RootPage = async ({
     return;
   }
 
-  const appwriteItemId =
-    (searchParams.id as string) || accounts.data[0].appwriteItemId;
-
   const account = await getAccount({
-    appwriteItemId,
+    appwriteItemId:
+      (searchParams.id as string) || accounts.data[0].appwriteItemId,
   });
 
   return (
