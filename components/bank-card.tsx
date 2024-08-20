@@ -1,33 +1,44 @@
-import Link from "next/link";
+"use client";
 
-import { cn, formatAmount } from "@/lib/utils";
 import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import { cn, formatAmount } from "@/lib/utils";
 
 interface Props {
   account: Account;
   userName: string;
   showBalance?: boolean;
-  specialCard?: boolean;
 }
 
-export const BankCard = ({
-  account,
-  userName,
-  showBalance = true,
-  specialCard,
-}: Props) => {
+export const BankCard = ({ account, userName, showBalance = true }: Props) => {
+  const [hasCopied, setHasCopied] = useState<boolean>(false);
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(account.sharaebleId);
+
+    setHasCopied(true);
+
+    setTimeout(() => {
+      setHasCopied(false);
+    }, 2000);
+  };
+
   return (
     <div className="flex flex-col">
       <Link
-        href="/"
+        href={`/transaction-history/?id=${account.appwriteItemId}`}
         className="relative flex h-[190px] w-full max-w-[320px] justify-between rounded-[20px] border border-white shadow-lg backdrop-blur-[6px]"
       >
         <div
           className={cn(
             "relative z-10 flex size-full max-w-[218px] flex-col justify-between rounded-l-[20px] px-5 pb-4 pt-5",
             {
-              "bg-gradient-to-r from-[#0179FE] to-[#4893FF]": !specialCard,
-              "bg-gray-700": specialCard,
+              "bg-gradient-to-r from-[#0179FE] to-[#4893FF]":
+                account.type !== "credit",
+              "bg-gray-700": account.type === "credit",
             }
           )}
         >
@@ -53,8 +64,8 @@ export const BankCard = ({
           className={cn(
             "flex size-full flex-1 flex-col items-end justify-between rounded-r-[20px] bg-cover bg-center bg-no-repeat py-5 pr-5",
             {
-              "bg-primary": !specialCard,
-              "bg-gradient-mesh": specialCard,
+              "bg-primary": account.type !== "credit",
+              "bg-gradient-mesh": account.type === "credit",
             }
           )}
         >
@@ -80,6 +91,50 @@ export const BankCard = ({
           className="absolute top-0 left-0"
         />
       </Link>
+      {showBalance && (
+        <Button
+          data-state="closed"
+          className="mt-3 flex max-w-[320px] gap-4"
+          variant="secondary"
+          onClick={copyToClipboard}
+        >
+          <p className="line-clamp-1 w-full max-w-full text-xs font-medium text-black-secondary">
+            {account.sharaebleId}
+          </p>
+          {!hasCopied ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              className="mr-2 size-4"
+            >
+              <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              className="mr-2 size-4"
+            >
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          )}
+        </Button>
+      )}
     </div>
   );
 };

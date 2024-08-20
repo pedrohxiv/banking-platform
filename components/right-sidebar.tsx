@@ -50,7 +50,6 @@ export const RightSidebar = ({ banks, transactions, user }: Props) => {
                 account={banks[0]}
                 userName={`${user.firstName} ${user.lastName}`}
                 showBalance={false}
-                specialCard
               />
             </div>
             {banks[1] && (

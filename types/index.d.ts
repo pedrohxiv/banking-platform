@@ -9,7 +9,7 @@ declare type Account = {
   type: string;
   subtype: string;
   appwriteItemId: string;
-  shareableId: string;
+  sharaebleId: string;
 };
 
 declare type Bank = {
@@ -19,7 +19,7 @@ declare type Bank = {
   accessToken: string;
   fundingSourceUrl: string;
   userId: string;
-  shareableId: string;
+  sharaebleId: string;
 };
 
 declare type Transaction = {
