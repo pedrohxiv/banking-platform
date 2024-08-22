@@ -2,7 +2,10 @@
 
 import { getBank, getBanks } from "@/actions/bank";
 import { getInstitution } from "@/actions/institution";
-import { getTransactions } from "@/actions/transaction";
+import {
+  getTransactions,
+  getTransactionsByBankId,
+} from "@/actions/transaction";
 import { plaidClient } from "@/lib/plaid";
 
 export const getAccount = async ({
@@ -21,9 +24,21 @@ export const getAccount = async ({
       access_token: bank.accessToken,
     });
 
+    const transfers = await getTransactionsByBankId({
+      bankId: bank.$id,
+    });
+
+    if (!transfers) {
+      throw new Error("Transfers not found");
+    }
+
     const institution = await getInstitution({
       institutionId: accounts.data.item.institution_id!,
     });
+
+    if (!institution) {
+      throw new Error("Transfers not found");
+    }
 
     const transactions = await getTransactions({
       accessToken: bank?.accessToken,
@@ -36,19 +51,28 @@ export const getAccount = async ({
     return {
       data: {
         id: accounts.data.accounts[0].account_id,
-        availableBalance: accounts.data.accounts[0].balances.available!,
-        currentBalance: accounts.data.accounts[0].balances.current!,
-        institutionId: institution!.institution_id,
+        availableBalance: accounts.data.accounts[0].balances.available,
+        currentBalance: accounts.data.accounts[0].balances.current,
+        institutionId: institution.institution_id,
         name: accounts.data.accounts[0].name,
         officialName: accounts.data.accounts[0].official_name,
-        mask: accounts.data.accounts[0].mask!,
+        mask: accounts.data.accounts[0].mask,
         type: accounts.data.accounts[0].type as string,
-        subtype: accounts.data.accounts[0].subtype! as string,
+        subtype: accounts.data.accounts[0].subtype as string,
         appwriteItemId: bank.$id,
       },
-      transactions: [...transactions].sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-      ),
+      transactions: [
+        ...transactions,
+        ...transfers.documents.map((transfer) => ({
+          id: transfer.$id,
+          name: transfer.name,
+          amount: transfer.amount,
+          date: transfer.$createdAt,
+          paymentChannel: transfer.channel,
+          category: transfer.category,
+          type: transfer.senderBankId === bank.$id ? "debit" : "credit",
+        })),
+      ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
     };
   } catch (error) {
     console.error(error);

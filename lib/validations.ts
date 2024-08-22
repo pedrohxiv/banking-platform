@@ -91,3 +91,23 @@ export const authFormSchema = (type: "sign-in" | "sign-up") =>
             .min(1, { message: "SSN is required" })
             .length(4, { message: "SSN must be exactly 4 characters" }),
   });
+
+export const paymentTransferFormSchema = z.object({
+  senderBank: z
+    .string()
+    .min(1, { message: "Sender bank is required" })
+    .min(4, { message: "Sender bank must be at least 4 characters" }),
+  note: z.string().optional(),
+  email: z
+    .string()
+    .min(1, { message: "Email is required" })
+    .email({ message: "Invalid email address" }),
+  receiverBank: z
+    .string()
+    .min(1, { message: "Sharable ID is required" })
+    .min(8, { message: "Sharable ID must be at least 8 characters" }),
+  amount: z
+    .string()
+    .min(1, { message: "Amount is required" })
+    .min(4, { message: "Amount must be at least 4 characters" }),
+});

@@ -71,3 +71,11 @@ export const accountTypeColors = (type: AccountTypes) => {
       };
   }
 };
+
+export const paymentTransferDefaultValues = (senderBank: string) => ({
+  senderBank,
+  note: "",
+  email: "",
+  receiverBank: "",
+  amount: "",
+});

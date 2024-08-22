@@ -44,6 +44,30 @@ export const getBank = async ({ documentId }: { documentId: string }) => {
   }
 };
 
+export const getBankByAccountId = async ({
+  accountId,
+}: {
+  accountId: string;
+}) => {
+  try {
+    const { database } = await createAdminClient();
+
+    const bank = await database.listDocuments(
+      process.env.APPWRITE_DATABASE_ID!,
+      process.env.APPWRITE_BANK_COLLECTION_ID!,
+      [Query.equal("accountId", [accountId])]
+    );
+
+    if (bank.total !== 1) {
+      return null;
+    }
+
+    return bank.documents[0];
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const getBanks = async ({ userId }: { userId: string }) => {
   try {
     const { database } = await createAdminClient();
