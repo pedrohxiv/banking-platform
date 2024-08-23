@@ -110,3 +110,32 @@ export const formatDateTime = (date: Date) => {
     timeOnly: formattedTime,
   };
 };
+
+export const countTransactionCategories = (transactions: Transaction[]) => {
+  const categoryCounts: { [category: string]: number } = {};
+
+  let totalCount = 0;
+
+  transactions &&
+    transactions.forEach((transaction) => {
+      const category = transaction.category;
+
+      if (categoryCounts.hasOwnProperty(category)) {
+        categoryCounts[category]++;
+      } else {
+        categoryCounts[category] = 1;
+      }
+
+      totalCount++;
+    });
+
+  const aggregatedCategories = Object.keys(categoryCounts).map((category) => ({
+    name: category,
+    count: categoryCounts[category],
+    totalCount,
+  }));
+
+  aggregatedCategories.sort((a, b) => b.count - a.count);
+
+  return aggregatedCategories;
+};

@@ -118,7 +118,11 @@ export const getUser = async ({ userId }: { userId: string }) => {
       [Query.equal("userId", [userId])]
     );
 
-    return user.documents[0];
+    if (!user || user.total === 0) {
+      return undefined;
+    }
+
+    return user.documents[0] as unknown as User;
   } catch (error) {
     console.error(error);
   }

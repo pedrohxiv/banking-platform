@@ -30,7 +30,7 @@ export const PlaidLink = ({ user, dwollaCustomerId, variant }: Props) => {
 
       router.push("/");
     },
-    [user]
+    [user, router]
   );
 
   const config: PlaidLinkOptions = {
@@ -46,7 +46,7 @@ export const PlaidLink = ({ user, dwollaCustomerId, variant }: Props) => {
 
       setToken(data?.linkToken!);
     })();
-  }, []);
+  }, [user]);
 
   return (
     <>

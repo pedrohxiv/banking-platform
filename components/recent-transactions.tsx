@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import { Pagination } from "@/components/pagination";
 import { TransactionsTable } from "@/components/transactions-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { accountTypeColors } from "@/lib/constants";
@@ -22,6 +23,17 @@ export const RecentTransactions = ({
   page,
   transactions = [],
 }: Props) => {
+  const rowsPerPage = 10;
+  const totalPages = Math.ceil(transactions.length / rowsPerPage);
+
+  const indexOfLastTransaction = page * rowsPerPage;
+  const indexOfFirstTransaction = indexOfLastTransaction - rowsPerPage;
+
+  const currentTransactions = transactions.slice(
+    indexOfFirstTransaction,
+    indexOfLastTransaction
+  );
+
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -127,7 +139,8 @@ export const RecentTransactions = ({
                 </p>
               </div>
             </div>
-            <TransactionsTable transactions={transactions} />
+            <TransactionsTable transactions={currentTransactions} />
+            <Pagination page={page} totalPages={totalPages} />
           </TabsContent>
         ))}
       </Tabs>

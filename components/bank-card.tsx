@@ -42,7 +42,7 @@ export const BankCard = ({ account, userName, showBalance = true }: Props) => {
             }
           )}
         >
-          <h1 className="text-base font-semibold text-white">{userName}</h1>
+          <h1 className="text-base font-semibold text-white">{account.name}</h1>
           <p className="font-black text-white">
             {formatAmount(account.currentBalance)}
           </p>

@@ -69,6 +69,19 @@ interface Props {
 }
 
 export const TransactionsTable = ({ transactions }: Props) => {
+  const handleCategoryStyles = (category: string) => {
+    const { borderColor, backgroundColor, textColor, chipBackgroundColor } =
+      categoryStyles[category as keyof typeof categoryStyles] ||
+      categoryStyles.default;
+
+    return {
+      borderColor,
+      backgroundColor,
+      textColor,
+      chipBackgroundColor,
+    };
+  };
+
   return (
     <Table>
       <TableHeader className="bg-[#F9FAFB]">
@@ -125,20 +138,20 @@ export const TransactionsTable = ({ transactions }: Props) => {
                 <div
                   className={cn(
                     "flex items-center justify-center truncate w-fit gap-1 rounded-2xl border-[1.5px] py-[2px] pl-1.5 pr-2",
-                    categoryStyles[status].borderColor,
-                    categoryStyles[status].chipBackgroundColor
+                    handleCategoryStyles(status).borderColor,
+                    handleCategoryStyles(status).chipBackgroundColor
                   )}
                 >
                   <div
                     className={cn(
                       "size-2 rounded-full",
-                      categoryStyles[status].backgroundColor
+                      handleCategoryStyles(status).backgroundColor
                     )}
                   />
                   <p
                     className={cn(
                       "text-[12px] font-medium",
-                      categoryStyles[status].textColor
+                      handleCategoryStyles(status).textColor
                     )}
                   >
                     {status}
@@ -155,28 +168,21 @@ export const TransactionsTable = ({ transactions }: Props) => {
                 <div
                   className={cn(
                     "flex items-center justify-center truncate w-fit gap-1 rounded-2xl border-[1.5px] py-[2px] pl-1.5 pr-2",
-                    categoryStyles[
-                      transaction.category as keyof typeof categoryStyles
-                    ].borderColor,
-                    categoryStyles[
-                      transaction.category as keyof typeof categoryStyles
-                    ].chipBackgroundColor
+                    handleCategoryStyles(transaction.category).borderColor,
+                    handleCategoryStyles(transaction.category)
+                      .chipBackgroundColor
                   )}
                 >
                   <div
                     className={cn(
                       "size-2 rounded-full",
-                      categoryStyles[
-                        transaction.category as keyof typeof categoryStyles
-                      ].backgroundColor
+                      handleCategoryStyles(transaction.category).backgroundColor
                     )}
                   />
                   <p
                     className={cn(
                       "text-[12px] font-medium",
-                      categoryStyles[
-                        transaction.category as keyof typeof categoryStyles
-                      ].textColor
+                      handleCategoryStyles(transaction.category).textColor
                     )}
                   >
                     {transaction.category}

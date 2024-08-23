@@ -72,7 +72,9 @@ export const getAccount = async ({
           category: transfer.category,
           type: transfer.senderBankId === bank.$id ? "debit" : "credit",
         })),
-      ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
+      ].sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      ) as Transaction[],
     };
   } catch (error) {
     console.error(error);
@@ -114,7 +116,7 @@ export const getAccounts = async ({ userId }: { userId: string }) => {
     );
 
     return {
-      data: accounts,
+      data: accounts as Account[],
       banks: accounts.length,
       currentBalance: accounts.reduce(
         (total, account) => total + account.currentBalance,

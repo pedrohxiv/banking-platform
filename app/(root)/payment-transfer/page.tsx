@@ -3,7 +3,8 @@ import { redirect } from "next/navigation";
 import { getAccounts } from "@/actions/account";
 import { getLoggedInUser } from "@/actions/user";
 import { Header } from "@/components/header";
-import { PaymentTransferForm } from "@/components/payment-transfer-form";
+
+import { PaymentTransferForm } from "./_components/payment-transfer-form";
 
 const PaymentTransferPage = async () => {
   const user = await getLoggedInUser();

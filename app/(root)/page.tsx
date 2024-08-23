@@ -29,6 +29,10 @@ const RootPage = async ({ searchParams }: Props) => {
       (searchParams.id as string) || accounts.data[0].appwriteItemId,
   });
 
+  if (!account) {
+    return;
+  }
+
   return (
     <section className="no-scrollbar flex w-full flex-row max-xl:max-h-screen max-xl:overflow-y-scroll">
       <div className="no-scrollbar flex w-full flex-1 flex-col gap-8 px-5 sm:px-8 py-7 lg:py-12 xl:max-h-screen xl:overflow-y-scroll">
@@ -47,7 +51,7 @@ const RootPage = async ({ searchParams }: Props) => {
         </header>
         <RecentTransactions
           accounts={accounts.data}
-          transactions={account?.transactions}
+          transactions={account.transactions}
           appwriteItemId={accounts.data[0].appwriteItemId}
           page={+(searchParams.page as string) || 1}
         />
@@ -55,7 +59,7 @@ const RootPage = async ({ searchParams }: Props) => {
       <RightSidebar
         user={user}
         transactions={account?.transactions}
-        banks={accounts.data.slice(0, 2)}
+        accounts={accounts.data.slice(0, 2)}
       />
     </section>
   );

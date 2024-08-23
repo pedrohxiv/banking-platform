@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getAccount, getAccounts } from "@/actions/account";
 import { getLoggedInUser } from "@/actions/user";
 import { Header } from "@/components/header";
+import { Pagination } from "@/components/pagination";
 import { TransactionsTable } from "@/components/transactions-table";
 import { formatAmount } from "@/lib/utils";
 
@@ -27,6 +28,22 @@ const TransactionHistoryPage = async ({ searchParams }: Props) => {
     appwriteItemId:
       (searchParams.id as string) || accounts.data[0].appwriteItemId,
   });
+
+  if (!account) {
+    return;
+  }
+
+  const rowsPerPage = 10;
+  const totalPages = Math.ceil(account?.transactions.length! / rowsPerPage);
+
+  const indexOfLastTransaction =
+    Number(searchParams.page as string) || 1 * rowsPerPage;
+  const indexOfFirstTransaction = indexOfLastTransaction - rowsPerPage;
+
+  const currentTransactions = account.transactions.slice(
+    indexOfFirstTransaction,
+    indexOfLastTransaction
+  );
 
   return (
     <section className="no-scrollbar flex max-h-screen w-full flex-col gap-8 overflow-y-scroll bg-gray-25 p-8 xl:py-12">
@@ -57,7 +74,15 @@ const TransactionHistoryPage = async ({ searchParams }: Props) => {
           </div>
         </div>
         <section className="flex w-full flex-col gap-6">
-          <TransactionsTable transactions={account?.transactions} />
+          <TransactionsTable transactions={currentTransactions} />
+          {totalPages > 1 && (
+            <div className="my-4 w-full">
+              <Pagination
+                page={Number(searchParams.page as string) || 1}
+                totalPages={totalPages}
+              />
+            </div>
+          )}
         </section>
       </div>
     </section>
